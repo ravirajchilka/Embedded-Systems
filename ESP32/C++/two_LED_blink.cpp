@@ -22,7 +22,7 @@ class LEDsToggle {
 			}
 		}
 
-		std::uint64_t makeMask() {
+		std::uint64_t makeMask() const {
 			std::uint64_t mask = 0;
 			for(const auto pin:pinsArray) {
 				mask |= 1ULL << static_cast<std::uint16_t>(pin);
@@ -56,7 +56,7 @@ class LEDsToggle {
 		}
 
 	public:
-		LEDsToggle(std::array<gpio_num_t,2U> pinsArray, bool ledStateRED, bool ledStateBLUE):
+		LEDsToggle(const std::array<gpio_num_t,2U> &pinsArray, bool ledStateRED, bool ledStateBLUE):
 		pinsArray(pinsArray),      
 		ledRED(pinsArray[0]),       
 		ledBLUE(pinsArray[1]),     
@@ -85,16 +85,16 @@ class LEDsToggle {
 
 extern "C" void app_main(void)
 {
-	auto pinsArray = std::array<gpio_num_t,2>{GPIO_NUM_23,GPIO_NUM_22};
+	constexpr auto pinsArray = std::array<gpio_num_t,2>{GPIO_NUM_23,GPIO_NUM_22};
 	LEDsToggle ledsController(pinsArray,false,false);
 
 	while(true) {
 		ledsController.toggleLEDblue();
-		vTaskDelay(pdMS_TO_TICKS(1000));
+		vTaskDelay(pdMS_TO_TICKS(100));
 		ledsController.toggleLEDblue();
 
 		ledsController.toggleLEDred();
-		vTaskDelay(pdMS_TO_TICKS(1000));
+		vTaskDelay(pdMS_TO_TICKS(100));
 		ledsController.toggleLEDred();
 	}
 
